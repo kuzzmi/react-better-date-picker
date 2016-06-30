@@ -1,0 +1,11 @@
+.demo {
+    display: flex;
+    flex: 1;
+    align-content: center;
+    justify-content: center;
+}
+
+.demo .better-date-picker-container {
+    align-self: center;
+    border: 1px solid blue;
+}

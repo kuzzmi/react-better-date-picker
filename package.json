@@ -1,0 +1,23 @@
+{
+  "name": "react-better-date-picker",
+  "version": "0.0.1",
+  "description": "Yet another date picker for React. But better.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuzzmi/react-better-date-picker.git"
+  },
+  "author": "Igor Kuzmenko <igor@kuzzmi.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kuzzmi/react-better-date-picker/issues"
+  },
+  "homepage": "https://github.com/kuzzmi/react-better-date-picker#readme",
+  "dependencies": {
+    "moment": "^2.13.0",
+    "react": "^15.1.0"
+  }
+}

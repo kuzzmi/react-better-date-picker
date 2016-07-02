@@ -5,7 +5,9 @@ import moment from 'moment';
 // Will allow to easily swap "themes" as well
 // as providing a bare component with no styling
 const classes = {
-    container: 'better-date-picker-container'
+    container: 'better-date-picker-container',
+    input: 'better-date-picker-input',
+    calendar: 'better-date-picker-calendar',
 };
 
 const defaults = {
@@ -43,6 +45,8 @@ class BetterDatePicker extends Component {
         this.state = {
             input: props.date || ''
         };
+
+        this.onTextChange = this.onTextChange.bind(this);
     }
 
     onTextChange(e) {
@@ -51,7 +55,8 @@ class BetterDatePicker extends Component {
 
     render() {
         const {
-            format = defaults.format
+            format = defaults.format,
+            input = defaults.input
         } = this.props;
 
         let value = getMomentOrNull(this.state.input, format);
@@ -63,11 +68,22 @@ class BetterDatePicker extends Component {
 
         return (
             <div className={ classes.container }>
-                <div>
-                    <input type="text"
-                        value={ value }
-                        placeholder={ format }
-                        />
+                <input type="text"
+                    className={ classes.input }
+                    value={ value }
+                    onChange={ this.onTextChange }
+                    placeholder={ format }
+                    />
+                <div className={ classes.calendar }>
+                    <div className={ classes.controls }>
+                        <div className={ classes.leftArrow }>
+                        </div>
+                        <div className={ classes.title }>
+                            September 2016
+                        </div>
+                        <div className={ classes.rightArrow }>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

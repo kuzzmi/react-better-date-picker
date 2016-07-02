@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 
 import BetterDatePicker from '../src/react-better-date-picker';
 
-require('./better-date-picker-demo.css');
+require('./better-date-picker-demo.scss');
 
 class BetterDatePickerDemo extends Component {
     state = {
         date: new Date(),
-        format: 'MMMM DD'
+        format: 'dddd, LL'
     }
 
     render() {

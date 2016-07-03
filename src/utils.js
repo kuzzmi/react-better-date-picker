@@ -37,9 +37,11 @@ export const getTotalWeeksInMonth = date => {
         return ( duration.weeks() || 5 ) + 1;
     */
 
+    return moment(date).endOf('month').week() - moment(date).startOf('month').week() + 1;
+
     // However, we can keep the size of calendar consistent,
     // and set the amount to constant 6
-    return 6;
+    // return 6;
 }
 
 export const getFirstDayOfFirstWeek = date => {

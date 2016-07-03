@@ -86,6 +86,9 @@ class BetterDatePicker extends Component {
     handleOnInputClick(e) {
         this.setState({ expanded: true, closing: false });
 
+        if (document.querySelector(`.${classes.protector}`))
+            document.querySelector(`.${classes.protector}`).remove();
+
         const style = {
             position: 'absolute',
             top: 0,

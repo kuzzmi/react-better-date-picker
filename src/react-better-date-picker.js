@@ -1,263 +1,127 @@
 import React, { Component, PropTypes } from 'react';
 import moment from 'moment';
 
-const config = {
-    classPrefix: 'better-date-picker',
-    yearsInterval: 4,
-    yearsCols: 3,
-    monthsCols: 4,
-    weeksCols: 7
-};
+import { WeeksView, MonthsView, YearsView } from './views.js';
 
-// List of classes used in the module.
-// Will allow to easily swap "themes" as well
-// as providing a bare component with no styling
-const classes = {
-    container:         `${config.classPrefix}-container`,
-    input:             `${config.classPrefix}-input`,
-    calendarContainer: `${config.classPrefix}-calendar-container`,
-    calendar:          `${config.classPrefix}-calendar`,
-    controls:          `${config.classPrefix}-controls`,
-    title:             `${config.classPrefix}-title`,
-    leftArrow:         `${config.classPrefix}-left-arrow`,
-    rightArrow:        `${config.classPrefix}-right-arrow`,
-    current:           `${config.classPrefix}-current`,
+import {
+    getMomentOrNull,
+    getYearsInterval
+} from './utils.js';
 
-    // WeeksView
-    weeksView:    `${config.classPrefix}-weeks-view`,
-    weekdayName:  `${config.classPrefix}-weeks-name`,
-    weekdayNames: `${config.classPrefix}-weeks-names`,
-    weeksRow:     `${config.classPrefix}-weeks-row`,
-    weeksCell:    `${config.classPrefix}-weeks-cell`,
-
-    // MonthsView
-    monthsView: `${config.classPrefix}-years-view`,
-    monthsRow:  `${config.classPrefix}-years-row`,
-    monthsCell: `${config.classPrefix}-years-cell`,
-
-    // YearsView
-    yearsView: `${config.classPrefix}-years-view`,
-    yearsRow:  `${config.classPrefix}-years-row`,
-    yearsCell: `${config.classPrefix}-years-cell`,
-};
+import config from './config.js';
+import classes from './classes.js';
 
 const defaults = {
     leftArrow: <span>‹</span>,
     rightArrow: <span>›</span>,
-
-    // USA format
+    view: 'weeks',
     format: 'DD-MMM-YYYY'
 };
 
-const getMomentOrNull = (date, format = defaults.format) => {
-    if (moment.isMoment(date)) {
-        return date;
-    }
-
-    if (moment.isDate(date)) {
-        return moment(date);
-    }
-
-    if (typeof date === 'string' && date.length) {
-        return moment(date, format);
-    }
-
-    return null;
-};
-
-const makeInterval = length => Array.apply(null, Array(length));
-
-const getYearsInterval = date => {
-    const dist = config.yearsInterval;
-    const yearsFrom = moment(date).add(-1 * dist, 'year');
-    const yearsTo = moment(date).add(dist, 'year');
-    return { yearsFrom, yearsTo };
-}
-
-const getTotalWeeksInMonth = date =>
-    moment.duration(
-        moment(date).endOf('month') - moment(date).startOf('month')
-    ).weeks() + 1;
-
-class WeeksView extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.handleOnDateClick = this.handleOnDateClick.bind(this);
-    }
-
-    handleOnDateClick(date) {
-        this.props.onDateClick(date);
-    }
-
-    render() {
-        const { date } = this.props;
-        const monthFrom = moment(date).month(0);
-        const format = 'MMM';
-        const rows = getTotalWeeksInMonth(date);
-        const now = moment();
-        const weekdays = makeInterval(config.weeksCols).map((_, i) =>
-                moment().weekday(i).format('dd'));
-
-        return (
-            <div className={ classes.weeksView }>
-                <div className={ classes.weekdayNames }>
-                    { weekdays.map((weekday, i) =>
-                        <div key={ i } className={ classes.weekdayName }>
-                            { weekday }
-                        </div>
-                    ) }
-                </div>
-                { makeInterval(rows).map(
-                    (_, index) =>
-                    <div key={ index } className={ classes.weeksRow }>
-                    { weekdays.map((_, i) =>
-                        <div key={ i } className={ classes.weeksCell }>
-                        { i }
-                        </div>
-                    ) }
-                    </div>
-                ) }
-            </div>
-        );
-    }
-};
-
-class MonthsView extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.handleOnDateClick = this.handleOnDateClick.bind(this);
-    }
-
-    handleOnDateClick(date) {
-        this.props.onDateClick(date);
-    }
-
-    render() {
-        const { date } = this.props;
-        const monthFrom = moment(date).month(0);
-        const format = 'MMM';
-        const rows = 12 / config.monthsCols;
-        const now = moment();
-
-        return (
-            <div className={ classes.yearsView }>
-            { makeInterval(rows).map((_, i) =>
-                <div key={ i }
-                    className={ classes.monthsRow }>
-                    { makeInterval(config.monthsCols).map( (_, j) => {
-                        const next = moment( monthFrom ).add(i + j + ( config.monthsCols - 1 ) * i, 'month');
-                        return (
-                            <div key={ j }
-                                onClick={ () => this.handleOnDateClick(moment( next )) }
-                                className={
-                                    classes.monthsCell +
-                                    ( next.isSame(now, 'month') ? ` ${ classes.current }` : '' )
-                                }
-                                >
-                                { next.format(format) }
-                            </div>
-                        )
-                    }) }
-                </div>
-            ) }
-            </div>
-        );
-    }
-};
-
-class YearsView extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.handleOnDateClick = this.handleOnDateClick.bind(this);
-    }
-
-    handleOnDateClick(date) {
-        this.props.onDateClick(date);
-    }
-
-    render() {
-        const { date } = this.props;
-        const { yearsFrom } = getYearsInterval(date);
-        const format = 'YYYY';
-        const rows = ( config.yearsInterval * 2 + 1 ) / config.yearsCols;
-        const now = moment();
-
-        return (
-            <div className={ classes.yearsView }>
-            { makeInterval(rows).map((_, i) =>
-                <div key={ i }
-                    className={ classes.yearsRow }>
-                    { makeInterval(config.yearsCols).map( (_, j) => {
-                        const next = moment( yearsFrom ).add(i + j + ( config.yearsCols - 1 ) * i, 'year');
-                        return (
-                            <div key={ j }
-                                onClick={ () => this.handleOnDateClick(moment( next )) }
-                                className={
-                                    classes.yearsCell +
-                                    ( next.isSame(now, 'year') ? ` ${ classes.current }` : '' )
-                                }
-                                >
-                                { next.format(format) }
-                            </div>
-                        )
-                    }) }
-                </div>
-            ) }
-            </div>
-        );
-    }
-};
 
 class BetterDatePicker extends Component {
     static propTypes = {
         date: PropTypes.oneOfType([
             PropTypes.string,
+            PropTypes.instanceOf(moment),
             PropTypes.instanceOf(Date)
         ]),
+        onChange: PropTypes.func.isRequired,
         view: PropTypes.oneOf(['weeks', 'months', 'years'])
     };
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            date: props.date || '',
-            expanded: false,
+        let input = getMomentOrNull(props.date, props.format);
+        if (input) {
+            input = input.format(props.format);
+        } else {
+            input = '';
+        }
 
+        this.state = {
+            date: props.date,
+            input,
+            expanded: false,
             // view by default
-            view:  props.view || 'years'
+            view:  props.view || defaults.view
         };
 
-        this.onInputChange = this.onInputChange.bind(this);
-        this.onInputClick = this.onInputClick.bind(this);
-        this.renderCalendarView = this.renderCalendarView.bind(this);
-        this.renderViewTitle = this.renderViewTitle.bind(this);
-        this.handleOnYearClick = this.handleOnYearClick.bind(this);
-        this.handleOnMonthClick = this.handleOnMonthClick.bind(this);
-        this.handleOnDateClick = this.handleOnDateClick.bind(this);
-        this.handleOnTitleClick = this.handleOnTitleClick.bind(this);
-        this.handleOnMoveClick = this.handleOnMoveClick.bind(this);
-        this.handleOnNextClick = this.handleOnNextClick.bind(this);
-        this.handleOnPrevClick = this.handleOnPrevClick.bind(this);
+        this.onInputChange          = this.onInputChange.bind(this);
+        this.handleOnInputClick     = this.handleOnInputClick.bind(this);
+        this.renderCalendarView     = this.renderCalendarView.bind(this);
+        this.renderViewTitle        = this.renderViewTitle.bind(this);
+        this.handleOnOutsideClick   = this.handleOnOutsideClick.bind(this);
+        this.handleOnDayClick       = this.handleOnDayClick.bind(this);
+        this.handleOnYearClick      = this.handleOnYearClick.bind(this);
+        this.handleOnMonthClick     = this.handleOnMonthClick.bind(this);
+        this.handleOnDateClick      = this.handleOnDateClick.bind(this);
+        this.handleOnTitleClick     = this.handleOnTitleClick.bind(this);
+        this.handleOnMoveClick      = this.handleOnMoveClick.bind(this);
+        this.handleOnNextClick      = this.handleOnNextClick.bind(this);
+        this.handleOnPrevClick      = this.handleOnPrevClick.bind(this);
+        this.handleOnTodayClick     = this.handleOnTodayClick.bind(this);
+        this.handleOnTomorrowClick  = this.handleOnTomorrowClick.bind(this);
+        this.handleOnNextWeekClick  = this.handleOnNextWeekClick.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let input = getMomentOrNull(nextProps.date, nextProps.format);
+        if (input) input = input.format(nextProps.format);
+        else input = '';
+
+        this.setState({ date: nextProps.date, input });
     }
 
     onInputChange(e) {
-
+        const input = e.target.value;
+        const momentOrNull = getMomentOrNull(input, this.props.format);
+        if (momentOrNull) {
+            this.props.onChange(momentOrNull.toDate());
+        }
+        this.setState({ input });
     }
 
-    onInputClick(e) {
-        this.setState({ expanded: true });
+    handleOnInputClick(e) {
+        this.setState({ expanded: true, closing: false });
+
+        const style = {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+        }
+
+        const protector = document.createElement('div');
+        protector.classList.add(classes.protector);
+        protector.style.position = style.position;
+        protector.style.top = style.top;
+        protector.style.left = style.left;
+        protector.style.right = style.right;
+        protector.style.bottom = style.bottom;
+        protector.addEventListener('click', this.handleOnOutsideClick);
+
+        document.querySelector('body').appendChild(protector);
+    }
+
+    handleOnOutsideClick(e) {
+        this.setState({ closing: true });
+
+        setTimeout(() => {
+            this.setState({ expanded: false });
+        }, 300);
+
+        document.querySelector(`.${classes.protector}`).remove();
     }
 
     renderCalendarView() {
-        const { date, view } = this.state;
+        const { date = new Date(), view } = this.state;
 
         switch(view) {
             case 'weeks':
-                return <WeeksView date={ date } />
+                return <WeeksView date={ date } onDateClick={ this.handleOnDayClick }/>
             case 'months':
                 return <MonthsView date={ date } onDateClick={ this.handleOnMonthClick }/>
             case 'years':
@@ -268,7 +132,7 @@ class BetterDatePicker extends Component {
     }
 
     renderViewTitle() {
-        const { date, view } = this.state;
+        const { date = new Date(), view } = this.state;
 
         switch(view) {
             case 'weeks':
@@ -276,7 +140,7 @@ class BetterDatePicker extends Component {
             case 'months':
                 return moment(date).format('YYYY')
             case 'years':
-                const { yearsFrom, yearsTo } = getYearsInterval(date);
+                const { yearsFrom, yearsTo } = getYearsInterval(date, config.yearsInterval);
                 const year = 'YYYY';
                 return yearsFrom.format(year) + ' — ' + yearsTo.format(year);
             default:
@@ -302,8 +166,21 @@ class BetterDatePicker extends Component {
         }
     }
 
-    handleOnDateClick(date) {
-        this.setState({ date });
+    handleOnTodayClick() {
+        this.handleOnDayClick(moment());
+    }
+
+    handleOnTomorrowClick() {
+        this.handleOnDayClick(moment().add(1, 'day'));
+    }
+
+    handleOnNextWeekClick() {
+        this.handleOnDayClick(moment().weekday(7));
+    }
+
+    handleOnDayClick(date) {
+        this.handleOnDateClick(date);
+        this.props.onChange(moment( date ).toDate());
     }
 
     handleOnMonthClick(date) {
@@ -314,6 +191,10 @@ class BetterDatePicker extends Component {
     handleOnYearClick(date) {
         this.setState({ view: 'months' });
         this.handleOnDateClick(date);
+    }
+
+    handleOnDateClick(date) {
+        this.setState({ date });
     }
 
     handleOnMoveClick(direction = 1) {
@@ -351,21 +232,15 @@ class BetterDatePicker extends Component {
             rightArrow = defaults.rightArrow,
         } = this.props;
 
-        let value = getMomentOrNull(this.state.date, format);
-        if (value) {
-            value = value.format(format);
-        } else {
-            value = '';
-        }
-
         return (
-            <div className={ classes.container }>
+            <div className={ classes.container + ( this.state.closing ? ` ${classes.containerClosing}` : '' ) }
+                style={{ zIndex: 1001 }}>
 
                 <input type="text"
                     className={ classes.input }
-                    value={ value }
+                    value={ this.state.input }
                     onChange={ this.onInputChange }
-                    onClick={ this.onInputClick }
+                    onClick={ this.handleOnInputClick }
                     placeholder={ format }
                     />
 
@@ -373,19 +248,34 @@ class BetterDatePicker extends Component {
                     this.state.expanded &&
                     <div className={ classes.calendarContainer }>
                         <div className={ classes.controls }>
-                            <div className={ classes.leftArrow } onClick={ this.handleOnPrevClick }>
-                            { leftArrow }
+                            <div className={ classes.leftArrow }
+                                 onClick={ this.handleOnPrevClick }>
+                                { leftArrow }
                             </div>
-                            <div className={ classes.title } onClick={ this.handleOnTitleClick }>
+                            <div className={ classes.title }
+                                 onClick={ this.handleOnTitleClick }>
                                 { this.renderViewTitle() }
                             </div>
-                            <div className={ classes.rightArrow } onClick={ this.handleOnNextClick }>
-                            { rightArrow }
+                            <div className={ classes.rightArrow }
+                                 onClick={ this.handleOnNextClick }>
+                                { rightArrow }
                             </div>
                         </div>
 
                         <div className={ classes.calendar }>
                             { this.renderCalendarView() }
+                        </div>
+
+                        <div className={ classes.toolbox }>
+                            <button type="button" onClick={ this.handleOnTodayClick }>
+                                Today
+                            </button>
+                            <button type="button" onClick={ this.handleOnTomorrowClick }>
+                                Tomorrow
+                            </button>
+                            <button type="button" onClick={ this.handleOnNextWeekClick }>
+                                Next week
+                            </button>
                         </div>
                     </div>
                 }

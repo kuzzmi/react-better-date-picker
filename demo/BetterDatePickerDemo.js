@@ -7,7 +7,11 @@ require('./better-date-picker-demo.scss');
 class BetterDatePickerDemo extends Component {
     state = {
         date: new Date(),
-        format: 'dddd, LL'
+        format: 'LL'
+    }
+
+    handleOnDateChange(date) {
+        this.setState({ date });
     }
 
     render() {
@@ -17,6 +21,7 @@ class BetterDatePickerDemo extends Component {
                 <BetterDatePicker
                     date={ date }
                     format={ format }
+                    onChange={ this.handleOnDateChange.bind(this) }
                     />
             </div>
         );

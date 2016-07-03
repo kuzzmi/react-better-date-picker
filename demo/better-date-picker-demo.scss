@@ -39,6 +39,17 @@ $soft-red: rgb(229, 114, 111);
     }
 }
 
+@keyframes collapse {
+    from {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    to {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+}
+
 .demo {
     background-color: $light-grey;
     flex: 1;
@@ -46,12 +57,33 @@ $soft-red: rgb(229, 114, 111);
 
     .better-date-picker-container {
         align-self: center;
-        width: 300px;
-        height: 350px;
+        width: 320px;
+        height: 430px;
+    }
+
+    .better-date-picker-container-closing {
+        .better-date-picker-calendar-container {
+            animation-name: collapse;
+            animation-duration: 0.3s;
+            animation-fill-mode: forwards;
+        }
+    }
+
+
+    .better-date-picker-selected {
+        background-color: $soft-red;
+        border-radius: 2px;
+        &:hover {
+            background-color: darken($soft-red, 5);
+        }
     }
 
     .better-date-picker-current {
-        background-color: $soft-red;
+        border: 1px solid $soft-red;
+        border-radius: 2px;
+        &:hover {
+            background-color: darken($soft-red, 5);
+        }
     }
 
     .better-date-picker-input {
@@ -88,6 +120,23 @@ $soft-red: rgb(229, 114, 111);
         border-radius: 2px;
         margin-top: 5px;
         box-shadow: 0 4px 8px $grey-015, 0 2px 4px $grey-015;
+
+        .better-date-picker-toolbox {
+            @include flexSuperCenter;
+
+            button {
+                font-size: 1em;
+                border: none;
+                border-radius: 2px;
+                color: white;
+                padding: 8px 10px;
+                margin: 15px 7px;
+                outline: 0;
+                background-color: $bluish-grey;
+
+                @include lighten;
+            }
+        }
 
         .better-date-picker-controls {
             animation-name: expand;
@@ -128,6 +177,7 @@ $soft-red: rgb(229, 114, 111);
                 flex: 1;
                 font-weight: 500;
                 padding: 8px;
+                font-size: 1.15em;
                 cursor: pointer;
                 border-radius: 2px;
                 @include lighten();
@@ -154,10 +204,14 @@ $soft-red: rgb(229, 114, 111);
                 .better-date-picker-weeks-names {
                     align-self: center;
                     @include flexSuperCenter;
+                    cursor: default;
 
                     .better-date-picker-weeks-name {
+                        @include noselect;
                         margin: 5px;
                         padding: 5px;
+                        width: 28px;
+                        height: 28px;
                         font-weight: 500;
                     }
                 }
@@ -172,11 +226,11 @@ $soft-red: rgb(229, 114, 111);
                         align-items: center;
                         margin: 5px;
                         padding: 5px;
-                        &.better-date-picker-current {
-                            border-radius: 2px;
-                            &:hover {
-                                background-color: darken($soft-red, 5);
-                            }
+                        width: 28px;
+                        height: 28px;
+
+                        &.better-date-picker-weeks-cell-not-current-month {
+                            color: rgba(255, 255, 255, 0.25);
                         }
                     }
                 }
@@ -197,12 +251,6 @@ $soft-red: rgb(229, 114, 111);
                         align-items: center;
                         margin: 10px 7px;
                         padding: 10px;
-                        &.better-date-picker-current {
-                            border-radius: 2px;
-                            &:hover {
-                                background-color: darken($soft-red, 5);
-                            }
-                        }
                     }
                 }
             }

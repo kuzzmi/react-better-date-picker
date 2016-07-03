@@ -1,10 +1,10 @@
 $grey-015: rgba(0, 0, 0, 0.15);
 
 $light-grey: rgb(230, 230, 232);
-$bluish-dark: rgb(48, 52, 55);
-$bluish-grey: rgb(90, 91, 95);
+$dark: rgb(48, 52, 55);
+$accent-grey: rgb(90, 91, 95);
 $bluish-very-dark: rgb(38, 42, 43);
-$soft-red: rgb(229, 114, 111);
+$highlight: rgb(229, 114, 111);
 
 @mixin lighten() {
     cursor: pointer;
@@ -71,18 +71,18 @@ $soft-red: rgb(229, 114, 111);
 
 
     .better-date-picker-selected {
-        background-color: $soft-red;
+        background-color: $highlight;
         border-radius: 2px;
         &:hover {
-            background-color: darken($soft-red, 5);
+            background-color: darken($highlight, 5);
         }
     }
 
     .better-date-picker-current {
-        border: 1px solid $soft-red;
+        border: 1px solid $highlight;
         border-radius: 2px;
         &:hover {
-            background-color: darken($soft-red, 5);
+            background-color: darken($highlight, 5);
         }
     }
 
@@ -115,7 +115,7 @@ $soft-red: rgb(229, 114, 111);
         transform-origin: top;
         transition: height 0.2s ease-out;
         width: 100%;
-        background-color: $bluish-dark;
+        background-color: $dark;
         color: white;
         border-radius: 2px;
         margin-top: 5px;
@@ -132,7 +132,7 @@ $soft-red: rgb(229, 114, 111);
                 padding: 8px 10px;
                 margin: 15px 7px;
                 outline: 0;
-                background-color: $bluish-grey;
+                background-color: $accent-grey;
 
                 @include lighten;
             }
@@ -146,7 +146,7 @@ $soft-red: rgb(229, 114, 111);
 
             box-shadow: 0 2px 4px $grey-015, 0 1px 3px $grey-015;
 
-            background-color: $bluish-grey;
+            background-color: $accent-grey;
             display: flex;
             align-items: center;
             height: 50px;

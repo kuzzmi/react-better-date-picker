@@ -6,7 +6,7 @@ require('./better-date-picker-demo.scss');
 
 class BetterDatePickerDemo extends Component {
     state = {
-        date: new Date(),
+        date: 'April 1, 2016',
         format: 'LL'
     }
 

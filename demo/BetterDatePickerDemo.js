@@ -26,6 +26,6 @@ class BetterDatePickerDemo extends Component {
             </div>
         );
     }
-};
+}
 
 export default BetterDatePickerDemo;

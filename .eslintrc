@@ -12,7 +12,8 @@
     },
     "env": {
         "browser": true,
-        "node": true
+        "node": true,
+        "jasmine": true
     },
     "rules": {
         "comma-dangle": 1,

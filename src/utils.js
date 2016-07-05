@@ -7,12 +7,15 @@ export const getMomentOrNull = (date, format = defaults.format) => {
         return date;
     }
 
-    if (moment.isDate(date)) {
+    if (moment.isDate(date) && !isNaN( date.getTime() )) {
         return moment(date);
     }
 
     if (typeof date === 'string' && date.length) {
-        return moment(date, format);
+        const result = moment(date, format, true);
+        if (result.isValid()) {
+            return result;
+        }
     }
 
     return null;

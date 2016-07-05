@@ -1,15 +1,36 @@
 // Karma configuration
 
-const webpackConfig = require('./webpack.config');
+const path = require('path');
 
-webpackConfig.externals = {
-    'cheerio': 'window',
-    'react/addons': true,
-    'react/lib/ExecutionEnvironment': true,
-    'react/lib/ReactContext': true
+const webpackConfig = {
+    devtool: 'inline-source-map',
+    externals: {
+        'cheerio': 'window',
+        'react/addons': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': true
+    },
+    module: {
+        preLoaders: [{
+            test: /\.(js|jsx)$/,
+            loader: 'isparta-loader',
+            include: [
+                path.join(__dirname, '/src')
+            ]
+        }],
+        loaders: [{
+            test: /\.(png|jpg|gif|woff|woff2|css|sass|scss|less|styl)$/,
+            loader: 'null-loader'
+        }, {
+            test: /\.(js|jsx)$/,
+            loader: 'babel-loader',
+            include: [
+                path.join(__dirname, '/src'),
+                path.join(__dirname, '/test')
+            ]
+        }]
+    }
 };
-
-webpackConfig.devtool = 'inline-source-map';
 
 module.exports = function(config) {
     config.set({

@@ -6,7 +6,7 @@ var entry = [ './demo/index.js' ];
 if (process.env.NODE_ENV === 'development') {
     entry = entry.concat([
         'webpack-dev-server/client?http://localhost:3300',
-        'webpack/hot/only-dev-server',
+        'webpack/hot/only-dev-server'
     ]);
 }
 
@@ -16,20 +16,20 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'demo'),
         filename: 'bundle.js',
-        publicPath: '/demo/',
+        publicPath: '/demo/'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoErrorsPlugin()
     ],
     resolve: {
-        extensions: ['', '.js', '.jsx'],
+        extensions: ['', '.js', '.jsx']
     },
     module: {
         loaders: [{
             test: /\.jsx?$/,
             loaders: ['react-hot', 'babel'],
-            exclude: /build|node_modules/,
+            exclude: /build|node_modules/
         }, {
             test: /\.css$/,
             loaders: ['style', 'css']
@@ -39,6 +39,6 @@ module.exports = {
         }, {
             test: /\.svg$/,
             loaders: ['svg-url']
-        }],
-    },
+        }]
+    }
 };

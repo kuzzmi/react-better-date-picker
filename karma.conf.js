@@ -1,6 +1,7 @@
 // Karma configuration
 
 const webpackConfig = require('./webpack.config');
+const path = require('path');
 
 module.exports = function(config) {
     config.set({
@@ -9,15 +10,13 @@ module.exports = function(config) {
         frameworks: ['jasmine'],
 
         files: [
-            'test/*.spec.js'
+            path.resolve(__dirname, 'test/loadtests.js')
         ],
 
         exclude: [ ],
 
         preprocessors: {
-            // add webpack as preprocessor
-            'src/**/*.js': ['webpack', 'sourcemap'],
-            'test/**/*.js': ['webpack', 'sourcemap']
+            'test/loadtests.js': [ 'webpack', 'sourcemap' ]
         },
 
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter

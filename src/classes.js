@@ -35,6 +35,6 @@ export default {
     // YearsView
     yearsView:            `${config.classPrefix}-years-view`,
     yearsRow:             `${config.classPrefix}-years-row`,
-    yearsCell:            `${config.classPrefix}-years-cell`,
+    yearsCell:            `${config.classPrefix}-years-cell`
 };
 

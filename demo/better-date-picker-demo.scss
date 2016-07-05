@@ -80,6 +80,7 @@ $highlight: rgb(229, 114, 111);
 
     .better-date-picker-current {
         border: 1px solid $highlight;
+        box-sizing: border-box;
         border-radius: 2px;
         &:hover {
             background-color: darken($highlight, 5);
@@ -251,6 +252,9 @@ $highlight: rgb(229, 114, 111);
                         align-items: center;
                         margin: 10px 7px;
                         padding: 10px;
+                        &.better-date-picker-current {
+                            margin: 9px 6px;
+                        }
                     }
                 }
             }

@@ -1,29 +1,20 @@
 import React, { Component, PropTypes } from 'react';
+import MomentPropTypes from 'react-moment-propTypes';
 import moment from 'moment';
 
 import { WeeksView, MonthsView, YearsView } from './views.js';
-
-import {
-    getMomentOrNull,
-    getYearsInterval
-} from './utils.js';
+import { getMomentOrNull, getYearsInterval } from './utils.js';
 
 import config from './config.js';
 import classes from './classes.js';
-
-const defaults = {
-    leftArrow: <span>‹</span>,
-    rightArrow: <span>›</span>,
-    view: 'weeks',
-    format: 'DD-MMM-YYYY'
-};
-
+import defaults from './defaults.js';
 
 class BetterDatePicker extends Component {
+
     static propTypes = {
         date: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.instanceOf(moment),
+            MomentPropTypes.momentObj,
+            MomentPropTypes.momentString,
             PropTypes.instanceOf(Date)
         ]),
         onChange: PropTypes.func.isRequired,
@@ -33,34 +24,38 @@ class BetterDatePicker extends Component {
     constructor(props) {
         super(props);
 
-        let input = getMomentOrNull(props.date, props.format);
-        if (input) {
-            input = input.format(props.format);
-        } else {
-            input = '';
-        }
+        let date = getMomentOrNull(props.date, props.format);
 
         this.state = {
-            date: props.date,
-            input,
+            date: date || new Date(),
+            input: date ? date.format(props.format) : '',
             expanded: false,
-            // view by default
-            view:  props.view || defaults.view
+            view: props.view || defaults.view
         };
 
         this.onInputChange          = this.onInputChange.bind(this);
-        this.handleOnInputClick     = this.handleOnInputClick.bind(this);
-        this.renderCalendarView     = this.renderCalendarView.bind(this);
-        this.renderViewTitle        = this.renderViewTitle.bind(this);
+
+        // Open/close
         this.handleOnOutsideClick   = this.handleOnOutsideClick.bind(this);
+        this.handleOnInputClick     = this.handleOnInputClick.bind(this);
+
+        // Rendering parts
+        this.renderViewTitle        = this.renderViewTitle.bind(this);
+        this.renderCalendarView     = this.renderCalendarView.bind(this);
+
+        // Clicks inside of calendar
         this.handleOnDayClick       = this.handleOnDayClick.bind(this);
         this.handleOnYearClick      = this.handleOnYearClick.bind(this);
         this.handleOnMonthClick     = this.handleOnMonthClick.bind(this);
         this.handleOnDateClick      = this.handleOnDateClick.bind(this);
         this.handleOnTitleClick     = this.handleOnTitleClick.bind(this);
+
+        // Left/Right arrows
         this.handleOnMoveClick      = this.handleOnMoveClick.bind(this);
         this.handleOnNextClick      = this.handleOnNextClick.bind(this);
         this.handleOnPrevClick      = this.handleOnPrevClick.bind(this);
+
+        // Bottom buttons
         this.handleOnTodayClick     = this.handleOnTodayClick.bind(this);
         this.handleOnTomorrowClick  = this.handleOnTomorrowClick.bind(this);
         this.handleOnNextWeekClick  = this.handleOnNextWeekClick.bind(this);
@@ -83,7 +78,7 @@ class BetterDatePicker extends Component {
         this.setState({ input });
     }
 
-    handleOnInputClick(e) {
+    handleOnInputClick() {
         this.setState({ expanded: true, closing: false });
 
         if (document.querySelector(`.${classes.protector}`))
@@ -109,7 +104,7 @@ class BetterDatePicker extends Component {
         document.querySelector('body').appendChild(protector);
     }
 
-    handleOnOutsideClick(e) {
+    handleOnOutsideClick() {
         this.setState({ closing: true });
 
         setTimeout(() => {
@@ -232,7 +227,7 @@ class BetterDatePicker extends Component {
             format = defaults.format,
             input = defaults.input,
             leftArrow = defaults.leftArrow,
-            rightArrow = defaults.rightArrow,
+            rightArrow = defaults.rightArrow
         } = this.props;
 
         return (
@@ -286,6 +281,6 @@ class BetterDatePicker extends Component {
             </div>
         );
     }
-};
+}
 
 export default BetterDatePicker;

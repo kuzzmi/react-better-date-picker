@@ -30,8 +30,12 @@ export const makeInterval = length => {
 
 export const getYearsInterval = ( date, interval ) => {
     const dist = interval;
-    const yearsFrom = moment(date).add(-1 * dist, 'year');
-    const yearsTo = moment(date).add(dist, 'year');
+    const yearsFrom = getMomentOrNull(date);
+    const yearsTo = getMomentOrNull(date);
+    if (yearsFrom && yearsTo) {
+        yearsFrom.add(-1 * dist, 'year');
+        yearsTo.add(dist, 'year');
+    }
     return { yearsFrom, yearsTo };
 }
 

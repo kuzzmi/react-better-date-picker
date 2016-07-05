@@ -16,7 +16,7 @@ module.exports = function(config) {
         exclude: [ ],
 
         preprocessors: {
-            'test/loadtests.js': [ 'webpack', 'sourcemap' ]
+            [ path.resolve(__dirname, 'test/loadtests.js') ]: [ 'webpack', 'sourcemap' ]
         },
 
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter

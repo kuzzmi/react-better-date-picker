@@ -1,7 +1,15 @@
 // Karma configuration
 
 const webpackConfig = require('./webpack.config');
-const path = require('path');
+
+webpackConfig.externals = {
+    'cheerio': 'window',
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
+};
+
+webpackConfig.devtool = 'inline-source-map';
 
 module.exports = function(config) {
     config.set({
@@ -10,13 +18,13 @@ module.exports = function(config) {
         frameworks: ['jasmine'],
 
         files: [
-            path.resolve(__dirname, 'test/loadtests.js')
+            'test/loadtests.js'
         ],
 
         exclude: [ ],
 
         preprocessors: {
-            [ path.resolve(__dirname, 'test/loadtests.js') ]: [ 'webpack', 'sourcemap' ]
+            'test/loadtests.js': [ 'webpack', 'sourcemap' ]
         },
 
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter

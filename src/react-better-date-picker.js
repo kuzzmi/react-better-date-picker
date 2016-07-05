@@ -10,14 +10,7 @@ import {
 
 import config from './config.js';
 import classes from './classes.js';
-
-const defaults = {
-    leftArrow: <span>‹</span>,
-    rightArrow: <span>›</span>,
-    view: 'weeks',
-    format: 'DD-MMM-YYYY'
-};
-
+import defaults from './defaults.js';
 
 class BetterDatePicker extends Component {
     static propTypes = {
@@ -83,7 +76,7 @@ class BetterDatePicker extends Component {
         this.setState({ input });
     }
 
-    handleOnInputClick(e) {
+    handleOnInputClick() {
         this.setState({ expanded: true, closing: false });
 
         if (document.querySelector(`.${classes.protector}`))
@@ -109,7 +102,7 @@ class BetterDatePicker extends Component {
         document.querySelector('body').appendChild(protector);
     }
 
-    handleOnOutsideClick(e) {
+    handleOnOutsideClick() {
         this.setState({ closing: true });
 
         setTimeout(() => {
@@ -232,7 +225,7 @@ class BetterDatePicker extends Component {
             format = defaults.format,
             input = defaults.input,
             leftArrow = defaults.leftArrow,
-            rightArrow = defaults.rightArrow,
+            rightArrow = defaults.rightArrow
         } = this.props;
 
         return (
@@ -286,6 +279,6 @@ class BetterDatePicker extends Component {
             </div>
         );
     }
-};
+}
 
 export default BetterDatePicker;

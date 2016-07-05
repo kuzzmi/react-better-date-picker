@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+import defaults from './defaults.js';
+
 export const getMomentOrNull = (date, format = defaults.format) => {
     if (moment.isMoment(date)) {
         return date;

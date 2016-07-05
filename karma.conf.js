@@ -4,7 +4,7 @@ const webpackConfig = require('./webpack.config');
 
 module.exports = function(config) {
     config.set({
-        basePath: '',
+        basePath: __dirname,
 
         frameworks: ['jasmine'],
 

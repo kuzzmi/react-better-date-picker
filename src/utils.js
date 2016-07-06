@@ -44,7 +44,7 @@ export const getYearsInterval = ( date, interval ) => {
         yearsTo.add(interval, 'year');
     }
     return { yearsFrom, yearsTo };
-}
+};
 
 export const getTotalWeeksInMonth = date => {
     if (getMomentOrNull(date) === null) {
@@ -52,12 +52,16 @@ export const getTotalWeeksInMonth = date => {
     }
 
     return moment(date).endOf('month').week() - moment(date).startOf('month').week() + 1;
-}
+};
 
 export const getFirstDayOfFirstWeek = date => {
+    if (getMomentOrNull(date) === null) {
+        return null;
+    }
+
     const fdom = moment(date).startOf('month');
     const fdomWeekday = fdom.weekday();
 
     return fdom.add(-1 * fdomWeekday, 'day');
-}
+};
 

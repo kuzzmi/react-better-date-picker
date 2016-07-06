@@ -131,11 +131,60 @@ describe('utils.js', () => {
         it('should be defined', () => {
             expect(getTotalWeeksInMonth).toBeDefined();
         });
+
+        it('should return 0 on wrong date', () => {
+            expect(getTotalWeeksInMonth()).toBe(0);
+            expect(getTotalWeeksInMonth('foobar')).toBe(0);
+            expect(getTotalWeeksInMonth(null)).toBe(0);
+            expect(getTotalWeeksInMonth(NaN)).toBe(0);
+            expect(getTotalWeeksInMonth({})).toBe(0);
+            expect(getTotalWeeksInMonth(undefined)).toBe(0);
+            expect(getTotalWeeksInMonth(new Date('foobar'))).toBe(0);
+        });
+
+        it('should return correct results on correct dates', () => {
+            const date1 = new Date('2016-01-01T00:00:00Z');
+            const date2 = new Date('2016-06-01T00:00:00Z');
+            const date3 = new Date('2016-07-01T00:00:00Z');
+            const date4 = new Date('2015-02-01T00:00:00Z');
+
+            expect(getTotalWeeksInMonth(date1)).toBe(6);
+            expect(getTotalWeeksInMonth(date2)).toBe(5);
+            expect(getTotalWeeksInMonth(date3)).toBe(6);
+            expect(getTotalWeeksInMonth(date4)).toBe(4);
+        });
     });
 
     describe('getFirstDayOfFirstWeek', () => {
         it('should be defined', () => {
             expect(getFirstDayOfFirstWeek).toBeDefined();
+        });
+
+        it('should return null if provided date is not correct', () => {
+            expect(getFirstDayOfFirstWeek()).toBe(null);
+            expect(getFirstDayOfFirstWeek('foobar')).toBe(null);
+            expect(getFirstDayOfFirstWeek(null)).toBe(null);
+            expect(getFirstDayOfFirstWeek(NaN)).toBe(null);
+            expect(getFirstDayOfFirstWeek({})).toBe(null);
+            expect(getFirstDayOfFirstWeek(undefined)).toBe(null);
+            expect(getFirstDayOfFirstWeek(new Date('foobar'))).toBe(null);
+        });
+
+        it('should return correct results on correct dates', () => {
+            const date1 = new Date('2016-01-01T00:00:00Z');
+            const date2 = new Date('2016-06-01T00:00:00Z');
+            const date3 = new Date('2016-07-01T00:00:00Z');
+            const date4 = new Date('2015-02-01T00:00:00Z');
+
+            expect(getFirstDayOfFirstWeek(date1).weekday()).toBe(0);
+            expect(getFirstDayOfFirstWeek(date2).weekday()).toBe(0);
+            expect(getFirstDayOfFirstWeek(date3).weekday()).toBe(0);
+            expect(getFirstDayOfFirstWeek(date4).weekday()).toBe(0);
+
+            expect(getFirstDayOfFirstWeek(date1).format('DD')).toBe('27');
+            expect(getFirstDayOfFirstWeek(date2).format('DD')).toBe('29');
+            expect(getFirstDayOfFirstWeek(date3).format('DD')).toBe('26');
+            expect(getFirstDayOfFirstWeek(date4).format('DD')).toBe('01');
         });
     });
 });

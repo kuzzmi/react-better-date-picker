@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import MomentPropTypes from 'react-moment-propTypes';
+import MomentPropTypes from 'react-moment-proptypes';
 import moment from 'moment';
 
 import { WeeksView, MonthsView, YearsView } from './views.js';

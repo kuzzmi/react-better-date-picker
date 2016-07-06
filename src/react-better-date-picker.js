@@ -9,6 +9,14 @@ import config from './config.js';
 import classes from './classes.js';
 import defaults from './defaults.js';
 
+const removeProtector = () => {
+    const oldProtector = document.querySelector(`.${classes.protector}`);
+
+    if (oldProtector) {
+        oldProtector.parentNode.removeChild(oldProtector);
+    }
+};
+
 class BetterDatePicker extends Component {
 
     static propTypes = {
@@ -81,8 +89,7 @@ class BetterDatePicker extends Component {
     handleOnInputClick() {
         this.setState({ expanded: true, closing: false });
 
-        if (document.querySelector(`.${classes.protector}`))
-            document.querySelector(`.${classes.protector}`).remove();
+        removeProtector();
 
         const style = {
             position: 'absolute',
@@ -111,7 +118,7 @@ class BetterDatePicker extends Component {
             this.setState({ expanded: false });
         }, 300);
 
-        document.querySelector(`.${classes.protector}`).remove();
+        removeProtector();
     }
 
     renderCalendarView() {

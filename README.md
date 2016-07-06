@@ -2,4 +2,4 @@
 
 # react-better-date-picker
 
-![](https://github.com/kuzzmi/react-better-date-picker/blob/master/demo/screenshot.jpg)
+![](https://raw.githubusercontent.com/kuzzmi/react-better-date-picker/gh-pages/demo/screenshot.jpg)

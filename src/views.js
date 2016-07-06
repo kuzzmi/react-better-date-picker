@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import MomentPropType from 'react-moment-propTypes';
+import MomentPropType from 'react-moment-proptypes';
 import moment from 'moment';
 
 import config from './config.js';

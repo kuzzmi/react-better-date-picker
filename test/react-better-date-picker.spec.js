@@ -25,7 +25,7 @@ describe('react-better-date-picker', function() {
     it('should output date in a text input field with no formatting', function() {
         const date = new Date('2016-01-01T00:00:00Z');
         const input = mount(<BetterDatePicker date={ date }/>).find('input[type="text"]');
-        const expectedPartial = '2016-01-01T01:00:00';
+        const expectedPartial = '2016-01-01';
 
         expect(input.props().value.indexOf(expectedPartial)).toBe(0);
     });

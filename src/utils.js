@@ -22,19 +22,26 @@ export const getMomentOrNull = (date, format = defaults.format) => {
 };
 
 export const makeInterval = length => {
-    if (isNaN(length) || +length <= 0)
+    if (length === null || length === '' || isNaN(length) || +length <= 0) {
         return [];
+    }
 
     return Array.apply(null, Array(length));
 };
 
 export const getYearsInterval = ( date, interval ) => {
-    const dist = interval;
-    const yearsFrom = getMomentOrNull(date);
-    const yearsTo = getMomentOrNull(date);
+    let yearsTo = null;
+    let yearsFrom = null;
+
+    if (interval === null || interval === '' || isNaN(interval) || +interval < 0) {
+        return { yearsFrom, yearsTo };
+    }
+
+    yearsFrom = getMomentOrNull(date);
+    yearsTo = getMomentOrNull(date);
     if (yearsFrom && yearsTo) {
-        yearsFrom.add(-1 * dist, 'year');
-        yearsTo.add(dist, 'year');
+        yearsFrom.add(-1 * interval, 'year');
+        yearsTo.add(interval, 'year');
     }
     return { yearsFrom, yearsTo };
 }

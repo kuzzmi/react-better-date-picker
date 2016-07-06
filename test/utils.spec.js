@@ -70,7 +70,7 @@ describe('utils.js', () => {
             expect(getYearsInterval({}, interval)).toEqual(expectedResult);
         });
 
-        xit('returns result with correct dates if the date and interval are correct', () => {
+        it('returns result with correct dates if the date and interval are correct', () => {
             const year = new Date('01-01-2010');
 
             const expectedResult1 = {
@@ -84,9 +84,6 @@ describe('utils.js', () => {
             // };
 
             expect(getYearsInterval(year, 5).yearsFrom.getTime()).toEqual(expectedResult1.yearsFrom.getTime());
-            // expect(getYearsInterval('asdasd', 1)).toEqual(expectedResult);
-            // expect(getYearsInterval(undefined, 1)).toEqual(expectedResult);
-            // expect(getYearsInterval({}, 1)).toEqual(expectedResult);
         });
     })
 });

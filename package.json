@@ -8,6 +8,7 @@
     "start-win": "set \"NODE_ENV=development\" && node server.js",
     "lint": "eslint src demo",
     "test": "karma start karma.conf.js --single-run",
+    "test:watch": "karma start karma.conf.js",
     "build-demo": "NODE_ENV=production webpack -p"
   },
   "repository": {

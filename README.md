@@ -5,3 +5,12 @@
 [Demo](http://demo.kuzzmi.com/react-better-date-picker/demo/)
 
 ![](https://raw.githubusercontent.com/kuzzmi/react-better-date-picker/master/demo/screenshot.jpg)
+
+# Usage
+
+Options:
+```
+    date: <moment Object>|<moment String>|<Date>|null
+```
+
+    <BetterDatePicker date={ date }/>

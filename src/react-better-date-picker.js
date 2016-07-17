@@ -234,7 +234,8 @@ class BetterDatePicker extends Component {
             format = defaults.format,
             input = defaults.input,
             leftArrow = defaults.leftArrow,
-            rightArrow = defaults.rightArrow
+            rightArrow = defaults.rightArrow,
+            styles = {}
         } = this.props;
 
         return (
@@ -242,7 +243,7 @@ class BetterDatePicker extends Component {
                 style={{ zIndex: 1001 }}>
 
                 <input type="text"
-                    className={ classes.input }
+                    className={ styles.input || classes.input }
                     value={ this.state.input }
                     onChange={ this.onInputChange }
                     onClick={ this.handleOnInputClick }

@@ -57,6 +57,13 @@ describe('react-better-date-picker', function() {
         expect(wrapper.find('.better-date-picker-weeks-view').length).toBe(1);
     });
 
+    it('should set a date even if provided date is null', () => {
+        const wrapper = mount(<BetterDatePicker date={ null } />);
+        const input = wrapper.find('input[type="text"]');
+        input.simulate('click');
+        expect(wrapper.find('.better-date-picker-title').text().indexOf('2016')).not.toEqual(-1);
+    });
+
     // it('contains spec with an expectation', function() {
     //     expect(shallow(<BetterDatePicker />).is('.foo')).toBe(true);
     // });

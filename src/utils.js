@@ -51,10 +51,10 @@ export const getTotalWeeksInMonth = date => {
         return 0;
     }
 
-    return 6;
+    const startWeek = moment(date).startOf('month').week();
+    const endWeek = moment(date).endOf('month').week();
 
-    // Not ready yet
-    // return moment(date).endOf('month').week() - moment(date).startOf('month').week() + 1;
+    return ( endWeek > startWeek ? endWeek - startWeek : startWeek ) + 1;
 };
 
 export const getFirstDayOfFirstWeek = date => {

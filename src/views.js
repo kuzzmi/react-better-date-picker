@@ -3,7 +3,6 @@ import MomentPropType from 'react-moment-proptypes';
 import moment from 'moment';
 
 import config from './config.js';
-import classes from './classes.js';
 
 import {
     makeInterval,
@@ -18,7 +17,8 @@ import {
 const View = ViewType => class extends Component {
     static propTypes = {
         onDateClick: PropTypes.func.isRequired,
-        date: MomentPropType.momentObj
+        date: MomentPropType.momentObj,
+        classes: PropTypes.object.isRequired
     };
 
     static defaultProps = {
@@ -36,12 +36,12 @@ const View = ViewType => class extends Component {
     }
 
     render() {
-        return <ViewType date={ this.props.date } handleOnDateClick={ this.handleOnDateClick } />
+        return <ViewType classes={ this.props.classes } date={ this.props.date } handleOnDateClick={ this.handleOnDateClick } />
     }
 };
 
 const Weeks = (props) => {
-    const { date } = props;
+    const { date, classes } = props;
     const rows = getTotalWeeksInMonth(date);
     const now = moment();
     const selected = moment(date);
@@ -85,7 +85,7 @@ const Weeks = (props) => {
 }
 
 const Months = (props) => {
-    const { date } = props;
+    const { date, classes } = props;
     const monthFrom = moment(date).month(0);
     const format = 'MMM';
     const rows = 12 / config.monthsCols;
@@ -119,7 +119,7 @@ const Months = (props) => {
 }
 
 const Years = (props) => {
-    const { date } = props;
+    const { date, classes } = props;
     const { yearsFrom } = getYearsInterval(date, config.yearsInterval);
     const format = 'YYYY';
     const rows = ( config.yearsInterval * 2 + 1 ) / config.yearsCols;

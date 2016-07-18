@@ -147,11 +147,13 @@ describe('utils.js', () => {
             const date2 = new Date('2016-06-01T00:00:00Z');
             const date3 = new Date('2016-07-01T00:00:00Z');
             const date4 = new Date('2015-02-01T00:00:00Z');
+            const date5 = new Date('2016-12-01T00:00:00Z');
 
             expect(getTotalWeeksInMonth(date1)).toBe(6);
             expect(getTotalWeeksInMonth(date2)).toBe(5);
             expect(getTotalWeeksInMonth(date3)).toBe(6);
             expect(getTotalWeeksInMonth(date4)).toBe(4);
+            expect(getTotalWeeksInMonth(date5)).toBe(5);
         });
     });
 

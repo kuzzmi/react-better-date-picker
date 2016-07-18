@@ -23,14 +23,14 @@ describe('react-better-date-picker', function() {
     });
 
     it('should output date in a text input field with no formatting', function() {
-        const date = new Date('2016-01-01T00:00:00Z');
-        const input = mount(<BetterDatePicker date={ date }/>).find('input[type="text"]');
+        const date = '2016-01-01';
+        const input = mount(<BetterDatePicker date={ date } />).find('input[type="text"]');
         const expectedPartial = '2016-01-01';
 
         expect(input.props().value.indexOf(expectedPartial)).toBe(0);
     });
 
-    it('should output date in a text input field with no formatting', function() {
+    it('should output date in a text input field with formatting', function() {
         const date = new Date('2016-01-01T00:00:00Z');
         const format = 'LL';
         const input = mount(<BetterDatePicker date={ date } format={ format }/>).find('input[type="text"]');
@@ -62,6 +62,15 @@ describe('react-better-date-picker', function() {
         const input = wrapper.find('input[type="text"]');
         input.simulate('click');
         expect(wrapper.find('.better-date-picker-title').text().indexOf('2016')).not.toEqual(-1);
+    });
+
+    it('should restrict available views to one view if the only view is set as available', () => {
+        const wrapper = mount(<BetterDatePicker date={ null } availableViews={['weeks']} />);
+        const input = wrapper.find('input[type="text"]');
+        input.simulate('click');
+        const title = wrapper.find('.better-date-picker-title');
+        title.simulate('click');
+        expect(wrapper.find('.better-date-weeks-view').length).toBe(1);
     });
 
     // it('contains spec with an expectation', function() {

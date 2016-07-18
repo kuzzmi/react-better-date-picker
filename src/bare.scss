@@ -1,0 +1,158 @@
+@mixin flexSuperCenter {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.better-date-picker-container {
+    align-self: center;
+}
+
+.better-date-picker-container-closing {
+    .better-date-picker-calendar-container {
+    }
+}
+
+
+.better-date-picker-selected {
+    border-radius: 2px;
+}
+
+.better-date-picker-current {
+    box-sizing: border-box;
+    border-radius: 2px;
+}
+
+.better-date-picker-input {
+    width: 100%;
+
+    outline: 0;
+    padding: 10px 14px;
+    font-size: 1.2em;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:focus {
+        margin-bottom: -2px;
+    }
+}
+
+.better-date-picker-calendar-container {
+    width: 100%;
+    color: white;
+    border-radius: 2px;
+    margin-top: 5px;
+
+    .better-date-picker-toolbox {
+        @include flexSuperCenter;
+
+        button {
+            font-size: 1em;
+            border: none;
+            border-radius: 2px;
+            color: white;
+            padding: 8px 10px;
+            margin: 15px 7px;
+            outline: 0;
+        }
+    }
+
+    .better-date-picker-controls {
+        animation-name: expand;
+        animation-duration: 0.3s;
+        animation-timing-function: ease-in;
+        transform-origin: top;
+
+        display: flex;
+        align-items: center;
+        height: 50px;
+
+        .better-date-picker-left-arrow,
+        .better-date-picker-right-arrow,
+        .better-date-picker-title {
+            text-align: center;
+        }
+
+        .better-date-picker-left-arrow,
+        .better-date-picker-right-arrow {
+            flex: 0.5;
+            font-size: 1.75em;
+            cursor: pointer;
+
+            span {
+                display: inline-block;
+                width: 34px;
+                height: 34px;
+                border-radius: 2px;
+            }
+        }
+
+        .better-date-picker-title {
+            flex: 1;
+            font-weight: 500;
+            padding: 8px;
+            font-size: 1.15em;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+    }
+
+    .better-date-picker-calendar {
+        min-height: 200px;
+        @include flexSuperCenter;
+
+        .better-date-picker-weeks-view {
+            align-self: center;
+            flex-direction: column;
+            @include flexSuperCenter;
+
+            .better-date-picker-weeks-names {
+                align-self: center;
+                @include flexSuperCenter;
+                cursor: default;
+
+                .better-date-picker-weeks-name {
+                    margin: 5px;
+                    padding: 5px;
+                    width: 28px;
+                    height: 28px;
+                    font-weight: 500;
+                }
+            }
+
+            .better-date-picker-weeks-row {
+                @include flexSuperCenter;
+
+                .better-date-picker-weeks-cell {
+                    @include flexSuperCenter;
+                    align-items: center;
+                    margin: 5px;
+                    padding: 5px;
+                    width: 28px;
+                    height: 28px;
+                }
+            }
+        }
+
+        .better-date-picker-years-view {
+            align-self: center;
+            flex-direction: column;
+            @include flexSuperCenter;
+
+            .better-date-picker-years-row {
+                @include flexSuperCenter;
+
+                .better-date-picker-years-cell {
+                    @include flexSuperCenter;
+                    align-items: center;
+                    margin: 10px 7px;
+                    padding: 10px;
+                    &.better-date-picker-current {
+                        margin: 9px 6px;
+                    }
+                }
+            }
+        }
+    }
+}
+

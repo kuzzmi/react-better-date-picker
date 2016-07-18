@@ -6,11 +6,11 @@ import { WeeksView, MonthsView, YearsView } from './views.js';
 import { getMomentOrNull, getYearsInterval } from './utils.js';
 
 import config from './config.js';
-import classes from './classes.js';
+import defaultClasses from './classes.js';
 import defaults from './defaults.js';
 
 const removeProtector = () => {
-    const oldProtector = document.querySelector(`.${classes.protector}`);
+    const oldProtector = document.querySelector(`.${defaultClasses.protector}`);
 
     if (oldProtector) {
         oldProtector.parentNode.removeChild(oldProtector);
@@ -26,7 +26,15 @@ class BetterDatePicker extends Component {
             PropTypes.instanceOf(Date)
         ]),
         onChange: PropTypes.func.isRequired,
-        view: PropTypes.oneOf(['weeks', 'months', 'years'])
+        classes: PropTypes.object,
+        view: PropTypes.oneOf(['weeks', 'months', 'years']),
+        availableViews: PropTypes.arrayOf(PropTypes.oneOf(['weeks', 'months', 'years']))
+    };
+
+    static defaultProps = {
+        classes: defaultClasses,
+        format: defaults.format,
+        availableViews: ['weeks', 'months', 'years']
     };
 
     constructor(props) {
@@ -100,7 +108,7 @@ class BetterDatePicker extends Component {
         }
 
         const protector = document.createElement('div');
-        protector.classList.add(classes.protector);
+        protector.classList.add(defaultClasses.protector);
         protector.style.position = style.position;
         protector.style.top = style.top;
         protector.style.left = style.left;
@@ -114,23 +122,22 @@ class BetterDatePicker extends Component {
     handleOnOutsideClick() {
         this.setState({ closing: true });
 
-        setTimeout(() => {
-            this.setState({ expanded: false });
-        }, 300);
+        this.setState({ expanded: false });
 
         removeProtector();
     }
 
     renderCalendarView() {
         const { date = new Date(), view } = this.state;
+        const { classes } = this.props;
 
         switch(view) {
             case 'weeks':
-                return <WeeksView date={ date } onDateClick={ this.handleOnDayClick }/>
+                return <WeeksView date={ date } classes={ classes } onDateClick={ this.handleOnDayClick }/>
             case 'months':
-                return <MonthsView date={ date } onDateClick={ this.handleOnMonthClick }/>
+                return <MonthsView date={ date } classes={ classes } onDateClick={ this.handleOnMonthClick }/>
             case 'years':
-                return <YearsView date={ date } onDateClick={ this.handleOnYearClick }/>
+                return <YearsView date={ date } classes={ classes } onDateClick={ this.handleOnYearClick }/>
             default:
                 return <p>Error</p>
         }
@@ -155,16 +162,23 @@ class BetterDatePicker extends Component {
 
     handleOnTitleClick() {
         const { view } = this.state;
+        const { availableViews } = this.props;
 
         switch(view) {
             case 'weeks':
-                this.setState({ view: 'months' });
+                if (availableViews.indexOf('months') !== -1) {
+                    this.setState({ view: 'months' });
+                }
                 break;
             case 'months':
-                this.setState({ view: 'years' });
+                if (availableViews.indexOf('years') !== -1) {
+                    this.setState({ view: 'years' });
+                }
                 break;
             case 'years':
-                this.setState({ view: 'weeks' });
+                if (availableViews.indexOf('weeks') !== -1) {
+                    this.setState({ view: 'weeks' });
+                }
                 break;
             default:
                 return
@@ -186,6 +200,9 @@ class BetterDatePicker extends Component {
     handleOnDayClick(date) {
         this.handleOnDateClick(date);
         this.props.onChange(moment( date ).toDate());
+
+        this.setState({ expanded: false });
+        removeProtector();
     }
 
     handleOnMonthClick(date) {
@@ -231,11 +248,10 @@ class BetterDatePicker extends Component {
 
     render() {
         const {
-            format = defaults.format,
-            input = defaults.input,
             leftArrow = defaults.leftArrow,
             rightArrow = defaults.rightArrow,
-            styles = {}
+            format,
+            classes
         } = this.props;
 
         return (
@@ -243,7 +259,7 @@ class BetterDatePicker extends Component {
                 style={{ zIndex: 1001 }}>
 
                 <input type="text"
-                    className={ styles.input || classes.input }
+                    className={ classes.input }
                     value={ this.state.input }
                     onChange={ this.onInputChange }
                     onClick={ this.handleOnInputClick }

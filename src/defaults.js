@@ -4,5 +4,5 @@ export default {
     leftArrow: <span>‹</span>,
     rightArrow: <span>›</span>,
     view: 'weeks',
-    format: 'DD-MMM-YYYY'
+    format: 'YYYY-MM-DD'
 }

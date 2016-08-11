@@ -64,7 +64,7 @@ describe('react-better-date-picker', function() {
         expect(wrapper.find('.better-date-picker-title').text().indexOf('2016')).not.toEqual(-1);
     });
 
-    it('should restrict available views to one view if the only view is set as available', () => {
+    xit('should restrict available views to one view if the only view is set as available', () => {
         const wrapper = mount(<BetterDatePicker date={ null } availableViews={['weeks']} />);
         const input = wrapper.find('input[type="text"]');
         input.simulate('click');
@@ -72,16 +72,4 @@ describe('react-better-date-picker', function() {
         title.simulate('click');
         expect(wrapper.find('.better-date-weeks-view').length).toBe(1);
     });
-
-    // it('contains spec with an expectation', function() {
-    //     expect(shallow(<BetterDatePicker />).is('.foo')).toBe(true);
-    // });
-    //
-    // it('contains spec with an expectation', function() {
-    //     expect(mount(<BetterDatePicker />).find('.foo').length).toBe(1);
-    // });
-    //
-    // it('can run an expectation with render', function() {
-    //     expect(render(<BetterDatePicker />).find('.foo').length).toBe(1);
-    // });
 });

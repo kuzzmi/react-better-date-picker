@@ -21,6 +21,7 @@ class BetterDatePickerDemo extends Component {
                 <BetterDatePicker
                     date={ date }
                     format={ format }
+                    placeholder="pick a date"
                     onChange={ this.handleOnDateChange.bind(this) }
                     />
             </div>

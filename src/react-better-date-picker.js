@@ -26,6 +26,7 @@ class BetterDatePicker extends Component {
             PropTypes.instanceOf(Date)
         ]),
         onChange: PropTypes.func.isRequired,
+        placeholder: PropTypes.string,
         classes: PropTypes.object,
         view: PropTypes.oneOf(['weeks', 'months', 'years']),
         availableViews: PropTypes.arrayOf(PropTypes.oneOf(['weeks', 'months', 'years']))
@@ -251,6 +252,7 @@ class BetterDatePicker extends Component {
             leftArrow = defaults.leftArrow,
             rightArrow = defaults.rightArrow,
             format,
+            placeholder,
             classes
         } = this.props;
 
@@ -263,7 +265,7 @@ class BetterDatePicker extends Component {
                     value={ this.state.input }
                     onChange={ this.onInputChange }
                     onClick={ this.handleOnInputClick }
-                    placeholder={ format }
+                    placeholder={ placeholder || format }
                     />
 
                 {

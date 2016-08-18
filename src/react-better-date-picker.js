@@ -29,13 +29,15 @@ class BetterDatePicker extends Component {
         placeholder: PropTypes.string,
         classes: PropTypes.object,
         view: PropTypes.oneOf(['weeks', 'months', 'years']),
-        availableViews: PropTypes.arrayOf(PropTypes.oneOf(['weeks', 'months', 'years']))
+        availableViews: PropTypes.arrayOf(PropTypes.oneOf(['weeks', 'months', 'years'])),
+        firstDayOfWeek: PropTypes.number
     };
 
     static defaultProps = {
         classes: defaultClasses,
         format: defaults.format,
-        availableViews: ['weeks', 'months', 'years']
+        availableViews: ['weeks', 'months', 'years'],
+        firstDayOfWeek: 0
     };
 
     constructor(props) {
@@ -105,8 +107,9 @@ class BetterDatePicker extends Component {
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0
-        }
+            bottom: 0,
+            zIndex: 999
+        };
 
         const protector = document.createElement('div');
         protector.classList.add(defaultClasses.protector);
@@ -115,6 +118,7 @@ class BetterDatePicker extends Component {
         protector.style.left = style.left;
         protector.style.right = style.right;
         protector.style.bottom = style.bottom;
+        protector.style.zIndex = style.zIndex;
         protector.addEventListener('click', this.handleOnOutsideClick);
 
         document.querySelector('body').appendChild(protector);
@@ -130,11 +134,11 @@ class BetterDatePicker extends Component {
 
     renderCalendarView() {
         const { date = new Date(), view } = this.state;
-        const { classes } = this.props;
+        const { classes, firstDayOfWeek } = this.props;
 
         switch(view) {
             case 'weeks':
-                return <WeeksView date={ date } classes={ classes } onDateClick={ this.handleOnDayClick }/>
+                return <WeeksView date={ date } firstDayOfWeek={ firstDayOfWeek } classes={ classes } onDateClick={ this.handleOnDayClick }/>
             case 'months':
                 return <MonthsView date={ date } classes={ classes } onDateClick={ this.handleOnMonthClick }/>
             case 'years':
@@ -195,7 +199,7 @@ class BetterDatePicker extends Component {
     }
 
     handleOnNextWeekClick() {
-        this.handleOnDayClick(moment().weekday(7));
+        this.handleOnDayClick(moment().add(7, 'day').weekday(this.props.firstDayOfWeek));
     }
 
     handleOnDayClick(date) {
@@ -257,8 +261,7 @@ class BetterDatePicker extends Component {
         } = this.props;
 
         return (
-            <div className={ classes.container + ( this.state.closing ? ` ${classes.containerClosing}` : '' ) }
-                style={{ zIndex: 1001 }}>
+            <div className={ classes.container + ( this.state.closing ? ` ${classes.containerClosing}` : '' ) }>
 
                 <input type="text"
                     className={ classes.input }
@@ -271,6 +274,19 @@ class BetterDatePicker extends Component {
                 {
                     this.state.expanded &&
                     <div className={ classes.calendarContainer }>
+
+                        <div className={ classes.toolbox }>
+                            <button type="button" onClick={ this.handleOnTodayClick }>
+                                Today
+                            </button>
+                            <button type="button" onClick={ this.handleOnTomorrowClick }>
+                                Tomorrow
+                            </button>
+                            <button type="button" onClick={ this.handleOnNextWeekClick }>
+                                Next week
+                            </button>
+                        </div>
+
                         <div className={ classes.controls }>
                             <div className={ classes.leftArrow }
                                  onClick={ this.handleOnPrevClick }>
@@ -288,18 +304,6 @@ class BetterDatePicker extends Component {
 
                         <div className={ classes.calendar }>
                             { this.renderCalendarView() }
-                        </div>
-
-                        <div className={ classes.toolbox }>
-                            <button type="button" onClick={ this.handleOnTodayClick }>
-                                Today
-                            </button>
-                            <button type="button" onClick={ this.handleOnTomorrowClick }>
-                                Tomorrow
-                            </button>
-                            <button type="button" onClick={ this.handleOnNextWeekClick }>
-                                Next week
-                            </button>
                         </div>
                     </div>
                 }

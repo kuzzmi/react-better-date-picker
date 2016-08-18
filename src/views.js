@@ -36,17 +36,22 @@ const View = ViewType => class extends Component {
     }
 
     render() {
-        return <ViewType classes={ this.props.classes } date={ this.props.date } handleOnDateClick={ this.handleOnDateClick } />
+        return <ViewType
+                    { ...this.props }
+                    classes={ this.props.classes }
+                    date={ this.props.date }
+                    handleOnDateClick={ this.handleOnDateClick }
+                    />
     }
 };
 
 const Weeks = (props) => {
-    const { date, classes } = props;
+    const { date, classes, firstDayOfWeek } = props;
     const rows = getTotalWeeksInMonth(date);
     const now = moment();
     const selected = moment(date);
     const weekdays = makeInterval(config.weeksCols)
-        .map((_, i) => moment().weekday(i).format('dd'));
+        .map((_, i) => moment().weekday(i + firstDayOfWeek).format('dd'));
 
     const fdow = getFirstDayOfFirstWeek(date);
 
@@ -63,7 +68,7 @@ const Weeks = (props) => {
                 (_, i) =>
                 <div key={ i } className={ classes.weeksRow }>
                 { weekdays.map((_, j) => {
-                    const next = moment( fdow ).add(i + j + 6 * i, 'day');
+                    const next = moment( fdow ).add(i + j + 6 * i + firstDayOfWeek, 'day');
                     return (
                         <div key={ j }
                             onClick={ () => props.handleOnDateClick(moment( next )) }

@@ -6,7 +6,7 @@ require('./better-date-picker-demo.scss');
 
 class BetterDatePickerDemo extends Component {
     state = {
-        date: '2010-12-01',
+        date: new Date(),
         format: 'LL'
     }
 
@@ -15,12 +15,13 @@ class BetterDatePickerDemo extends Component {
     }
 
     render() {
-        const { date, format } = this.state;
+        const { date } = this.state;
         return (
             <div className="demo">
                 <BetterDatePicker
                     date={ date }
                     placeholder="pick a date"
+                    firstDayOfWeek={ 1 }
                     onChange={ this.handleOnDateChange.bind(this) }
                     />
             </div>

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import MomentPropTypes from 'react-moment-proptypes';
 import moment from 'moment';
+// import onClickOutside from 'react-onclickoutside';
 
 import { WeeksView, MonthsView, YearsView } from './views.js';
 import { getMomentOrNull, getYearsInterval } from './utils.js';
@@ -8,14 +9,6 @@ import { getMomentOrNull, getYearsInterval } from './utils.js';
 import config from './config.js';
 import defaultClasses from './classes.js';
 import defaults from './defaults.js';
-
-const removeProtector = () => {
-    const oldProtector = document.querySelector(`.${defaultClasses.protector}`);
-
-    if (oldProtector) {
-        oldProtector.parentNode.removeChild(oldProtector);
-    }
-};
 
 class BetterDatePicker extends Component {
 
@@ -48,14 +41,14 @@ class BetterDatePicker extends Component {
         this.state = {
             date: date || new Date(),
             input: date ? date.format(props.format) : '',
-            expanded: false,
+            expanded: props.expanded || false,
+            toolboxOnTheBottom: false,
             view: props.view || defaults.view
         };
 
         this.onInputChange          = this.onInputChange.bind(this);
 
         // Open/close
-        this.handleOnOutsideClick   = this.handleOnOutsideClick.bind(this);
         this.handleOnInputClick     = this.handleOnInputClick.bind(this);
 
         // Rendering parts
@@ -78,6 +71,9 @@ class BetterDatePicker extends Component {
         this.handleOnTodayClick     = this.handleOnTodayClick.bind(this);
         this.handleOnTomorrowClick  = this.handleOnTomorrowClick.bind(this);
         this.handleOnNextWeekClick  = this.handleOnNextWeekClick.bind(this);
+
+        // Reposition calendar respecting the screen sizes
+        this.setupCalendarPosition = this.setupCalendarPosition.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -85,7 +81,76 @@ class BetterDatePicker extends Component {
         if (input) input = input.format(nextProps.format);
         else input = '';
 
-        this.setState({ date: nextProps.date, input });
+        if (nextProps.expanded === false && this.state.expanded === true) {
+            this.handleClickOutside();
+        }
+
+        this.setState({
+            date: nextProps.date || new Date(),
+            expanded: nextProps.expanded,
+            input
+        });
+    }
+
+
+    componentDidUpdate(nextProps, nextState) {
+        if (nextState.expanded === false &&
+            this.state.expanded === true &&
+            this.props.staticCalendar !== true) {
+            this.setupCalendarPosition();
+        }
+    }
+
+    setupCalendarPosition() {
+        const body = document.getElementsByTagName('body')[0];
+        const calendar = this.calendarElement;
+        const input = this.inputElement;
+
+        // Maximum visible sizes of the body
+        const maxVisibleHeight = body.clientHeight;
+        const maxVisibleWidth = body.clientWidth;
+
+        // Get Input field
+        const inputRect = input.getBoundingClientRect();
+
+        // Clone hidden calendar to detect size before animation
+        // of the original one has to happen
+        const clonedCalendar = calendar.cloneNode(true);
+        clonedCalendar.style.animation = 'none';
+        clonedCalendar.style.visibility = 'collapse';
+
+        // Setup a cloned version of a calendar
+        clonedCalendar.style.position = 'fixed';
+        clonedCalendar.style.top = ( inputRect.top + inputRect.height ) + 'px';
+        clonedCalendar.style.left = inputRect.left + 'px';
+
+        // Finally append clonedCalendar to the body, so
+        // we can get its sizes
+        body.appendChild(clonedCalendar);
+
+        const calendarRect = clonedCalendar.getBoundingClientRect();
+
+        // Calendar will be of a fixed size
+        calendar.style.position = 'fixed';
+
+        if (calendarRect.bottom > maxVisibleHeight) {
+            let top = inputRect.top - calendarRect.height - 10;
+            if (!this.state.toolboxOnTheBottom) {
+                top += 30;
+            }
+            calendar.style.top = `${top}px`;
+            calendar.style.transformOrigin = 'bottom';
+            this.setState({ toolboxOnTheBottom: true });
+        } else {
+            calendar.style.top = inputRect.top + inputRect.height + 'px';
+            this.setState({ toolboxOnTheBottom: false });
+        }
+
+        if (calendarRect.right > maxVisibleWidth) {
+            calendar.style.left = ( inputRect.right - calendarRect.width - 10 ) + 'px';
+        }
+
+        clonedCalendar.remove();
     }
 
     onInputChange(e) {
@@ -93,43 +158,19 @@ class BetterDatePicker extends Component {
         const momentOrNull = getMomentOrNull(input, this.props.format);
         if (momentOrNull) {
             this.props.onChange(momentOrNull.toDate());
+        } else {
+            this.props.onChange();
         }
         this.setState({ input });
     }
 
     handleOnInputClick() {
         this.setState({ expanded: true, closing: false });
-
-        removeProtector();
-
-        const style = {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 999
-        };
-
-        const protector = document.createElement('div');
-        protector.classList.add(defaultClasses.protector);
-        protector.style.position = style.position;
-        protector.style.top = style.top;
-        protector.style.left = style.left;
-        protector.style.right = style.right;
-        protector.style.bottom = style.bottom;
-        protector.style.zIndex = style.zIndex;
-        protector.addEventListener('click', this.handleOnOutsideClick);
-
-        document.querySelector('body').appendChild(protector);
+        this.props.onClick && this.props.onClick();
     }
 
-    handleOnOutsideClick() {
-        this.setState({ closing: true });
-
-        this.setState({ expanded: false });
-
-        removeProtector();
+    handleClickOutside() {
+        this.setState({ closing: true, expanded: false });
     }
 
     renderCalendarView() {
@@ -207,7 +248,7 @@ class BetterDatePicker extends Component {
         this.props.onChange(moment( date ).toDate());
 
         this.setState({ expanded: false });
-        removeProtector();
+        // removeProtector();
     }
 
     handleOnMonthClick(date) {
@@ -264,17 +305,21 @@ class BetterDatePicker extends Component {
             <div className={ classes.container + ( this.state.closing ? ` ${classes.containerClosing}` : '' ) }>
 
                 <input type="text"
+                    ref={ c => { this.inputElement = c } }
                     className={ classes.input }
                     value={ this.state.input }
                     onChange={ this.onInputChange }
                     onClick={ this.handleOnInputClick }
+                    onFocus={ this.handleOnInputClick }
                     placeholder={ placeholder || format }
                     />
 
                 {
                     this.state.expanded &&
-                    <div className={ classes.calendarContainer }>
+                    <div className={ classes.calendarContainer }
+                        ref={ c => { this.calendarElement = c } }>
 
+                    { !this.state.toolboxOnTheBottom &&
                         <div className={ classes.toolbox }>
                             <button type="button" onClick={ this.handleOnTodayClick }>
                                 Today
@@ -286,6 +331,7 @@ class BetterDatePicker extends Component {
                                 Next week
                             </button>
                         </div>
+                    }
 
                         <div className={ classes.controls }>
                             <div className={ classes.leftArrow }
@@ -305,6 +351,20 @@ class BetterDatePicker extends Component {
                         <div className={ classes.calendar }>
                             { this.renderCalendarView() }
                         </div>
+
+                    { this.state.toolboxOnTheBottom &&
+                        <div className={ classes.toolbox }>
+                            <button type="button" onClick={ this.handleOnTodayClick }>
+                                Today
+                            </button>
+                            <button type="button" onClick={ this.handleOnTomorrowClick }>
+                                Tomorrow
+                            </button>
+                            <button type="button" onClick={ this.handleOnNextWeekClick }>
+                                Next week
+                            </button>
+                        </div>
+                    }
                     </div>
                 }
 
@@ -312,5 +372,5 @@ class BetterDatePicker extends Component {
         );
     }
 }
-
+// onClickOutside()
 export default BetterDatePicker;

@@ -23,14 +23,18 @@ class BetterDatePicker extends Component {
         classes: PropTypes.object,
         view: PropTypes.oneOf(['weeks', 'months', 'years']),
         availableViews: PropTypes.arrayOf(PropTypes.oneOf(['weeks', 'months', 'years'])),
-        firstDayOfWeek: PropTypes.number
+        firstDayOfWeek: PropTypes.number,
+        theme: PropTypes.object
     };
 
     static defaultProps = {
         classes: defaultClasses,
         format: defaults.format,
         availableViews: ['weeks', 'months', 'years'],
-        firstDayOfWeek: 0
+        firstDayOfWeek: 0,
+
+        hideToolbox: false,
+        hideInput: false
     };
 
     constructor(props) {
@@ -247,8 +251,9 @@ class BetterDatePicker extends Component {
         this.handleOnDateClick(date);
         this.props.onChange(moment( date ).toDate());
 
-        this.setState({ expanded: false });
-        // removeProtector();
+        if (!this.props.staticCalendar) {
+            this.setState({ expanded: false });
+        }
     }
 
     handleOnMonthClick(date) {
@@ -296,6 +301,8 @@ class BetterDatePicker extends Component {
         const {
             leftArrow = defaults.leftArrow,
             rightArrow = defaults.rightArrow,
+            hideInput,
+            hideToolbox,
             format,
             placeholder,
             classes
@@ -304,22 +311,25 @@ class BetterDatePicker extends Component {
         return (
             <div className={ classes.container + ( this.state.closing ? ` ${classes.containerClosing}` : '' ) }>
 
-                <input type="text"
-                    ref={ c => { this.inputElement = c } }
-                    className={ classes.input }
-                    value={ this.state.input }
-                    onChange={ this.onInputChange }
-                    onClick={ this.handleOnInputClick }
-                    onFocus={ this.handleOnInputClick }
-                    placeholder={ placeholder || format }
-                    />
+                {
+                    !hideInput &&
+                    <input type="text"
+                        ref={ c => { this.inputElement = c } }
+                        className={ classes.input }
+                        value={ this.state.input }
+                        onChange={ this.onInputChange }
+                        onClick={ this.handleOnInputClick }
+                        onFocus={ this.handleOnInputClick }
+                        placeholder={ placeholder || format }
+                        />
+                }
 
                 {
                     this.state.expanded &&
                     <div className={ classes.calendarContainer }
                         ref={ c => { this.calendarElement = c } }>
 
-                    { !this.state.toolboxOnTheBottom &&
+                    { ( !this.state.toolboxOnTheBottom && !hideToolbox ) &&
                         <div className={ classes.toolbox }>
                             <button type="button" onClick={ this.handleOnTodayClick }>
                                 Today
@@ -352,7 +362,7 @@ class BetterDatePicker extends Component {
                             { this.renderCalendarView() }
                         </div>
 
-                    { this.state.toolboxOnTheBottom &&
+                    { ( this.state.toolboxOnTheBottom && !hideToolbox ) &&
                         <div className={ classes.toolbox }>
                             <button type="button" onClick={ this.handleOnTodayClick }>
                                 Today

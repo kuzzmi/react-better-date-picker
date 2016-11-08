@@ -108,13 +108,14 @@ class BetterDatePicker extends Component {
     setupCalendarPosition() {
         const body = document.getElementsByTagName('body')[0];
         const calendar = this.calendarElement;
-        const input = this.inputElement;
+        const input = this.inputElement || this.container;
 
         // Maximum visible sizes of the body
         const maxVisibleHeight = body.clientHeight;
         const maxVisibleWidth = body.clientWidth;
 
         // Get Input field
+        // if !inputRect
         const inputRect = input.getBoundingClientRect();
 
         // Clone hidden calendar to detect size before animation
@@ -308,9 +309,12 @@ class BetterDatePicker extends Component {
             classes
         } = this.props;
 
-        return (
-            <div className={ classes.container + ( this.state.closing ? ` ${classes.containerClosing}` : '' ) }>
+        const containerClasses = classes.container +
+             ( this.state.closing ? ` ${classes.containerClosing}` : '' );
 
+        return (
+            <div className={ containerClasses }
+                ref={ c => { this.container = c } }>
                 {
                     !hideInput &&
                     <input type="text"

@@ -1,44 +1,26 @@
 var path = require('path');
-var webpack = require('webpack');
+// var webpack = require('webpack');
 
-var entry = [ './demo/index.js' ];
-
-if (process.env.NODE_ENV === 'development') {
-    entry = entry.concat([
-        'webpack-dev-server/client?http://localhost:3300',
-        'webpack/hot/only-dev-server'
-    ]);
-}
+var entry = [ './src/react-better-date-picker.js' ];
 
 module.exports = {
-    devtool: 'eval',
-    entry: entry,
+    devtool: 'cheap-module-source-map',
+    entry,
     output: {
-        path: path.join(__dirname, 'demo'),
-        filename: 'bundle.js',
-        publicPath: '/demo/'
+        path: path.join(__dirname, 'dist'),
+        filename: 'index.js',
+        library: 'react-better-date-picker',
+        libraryTarget: 'amd',
+        publicPath: '/dist/'
     },
-    plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
-    ],
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js']
     },
     module: {
         loaders: [{
             test: /\.jsx?$/,
-            loaders: ['react-hot', 'babel'],
+            loaders: ['babel'],
             exclude: /build|node_modules/
-        }, {
-            test: /\.css$/,
-            loaders: ['style', 'css']
-        }, {
-            test: /\.scss$/,
-            loaders: ['style', 'css', 'sass']
-        }, {
-            test: /\.svg$/,
-            loaders: ['svg-url']
         }]
     }
 };

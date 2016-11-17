@@ -99,7 +99,7 @@ class BetterDatePicker extends Component {
         }
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    componentDidUpdate(nextProps, nextState) {
         if (nextState.expanded === false &&
             this.state.expanded === true &&
             this.props.staticCalendar !== true) {

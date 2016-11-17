@@ -2,13 +2,13 @@
   "name": "react-better-date-picker",
   "version": "0.1.4",
   "description": "Yet another date picker for React. But better.",
-  "main": "src/react-better-date-picker.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "NODE_ENV=development node server.js",
-    "start-win": "set \"NODE_ENV=development\" && node server.js",
+    "start": "node server.js",
     "lint": "eslint src demo",
     "test": "karma start karma.conf.js --single-run",
     "test:watch": "karma start karma.conf.js",
+    "build": "webpack --config webpack.config.js",
     "build-demo": "NODE_ENV=production webpack -p"
   },
   "repository": {
@@ -21,14 +21,16 @@
     "url": "https://github.com/kuzzmi/react-better-date-picker/issues"
   },
   "homepage": "https://github.com/kuzzmi/react-better-date-picker#readme",
-  "dependencies": {
+  "peerDependencies": {
     "moment": "^2.16.0",
     "react": "^15.2.1",
-    "react-dom": "^15.1.0",
-    "react-moment-proptypes": "^1.2.0",
-    "react-onclickoutside": "^5.3.3"
+    "react-dom": "^15.2.1"
   },
   "devDependencies": {
+    "moment": "^2.16.0",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "react-moment-proptypes": "^1.2.0",
     "babel": "^6.5.2",
     "babel-core": "^6.10.4",
     "babel-eslint": "^6.1.0",

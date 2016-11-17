@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import BetterDatePicker from '../src/react-better-date-picker';
 
-require('./better-date-picker-demo.scss');
+import './better-date-picker-demo.scss';
 
 class BetterDatePickerDemo extends Component {
     state = {
@@ -18,12 +18,14 @@ class BetterDatePickerDemo extends Component {
         const { date } = this.state;
         return (
             <div className="demo">
-                <BetterDatePicker
-                    date={ date }
-                    placeholder="pick a date"
-                    firstDayOfWeek={ 1 }
-                    onChange={ this.handleOnDateChange.bind(this) }
-                    />
+                <div className="wrapper">
+                    <BetterDatePicker
+                        date={ date }
+                        placeholder="pick a date"
+                        firstDayOfWeek={ 1 }
+                        onChange={ this.handleOnDateChange.bind(this) }
+                        />
+                </div>
             </div>
         );
     }

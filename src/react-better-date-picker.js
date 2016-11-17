@@ -22,7 +22,7 @@ class BetterDatePicker extends Component {
         placeholder: PropTypes.string,
         classes: PropTypes.object,
         view: PropTypes.oneOf(['weeks', 'months', 'years']),
-        availableViews: PropTypes.arrayOf(PropTypes.oneOf(['weeks', 'months', 'years'])),
+        views: PropTypes.arrayOf(PropTypes.oneOf(['weeks', 'months', 'years'])),
         firstDayOfWeek: PropTypes.number,
         theme: PropTypes.object
     };
@@ -30,7 +30,7 @@ class BetterDatePicker extends Component {
     static defaultProps = {
         classes: defaultClasses,
         format: defaults.format,
-        availableViews: ['weeks', 'months', 'years'],
+        views: ['weeks', 'months', 'years'],
         firstDayOfWeek: 0,
 
         hideToolbox: false,
@@ -40,41 +40,43 @@ class BetterDatePicker extends Component {
     constructor(props) {
         super(props);
 
-        let date = getMomentOrNull(props.date, props.format);
+        const date = getMomentOrNull(props.date, props.format);
 
         this.state = {
-            date: date || new Date(),
-            input: date ? date.format(props.format) : '',
+            date:     props.date || moment(),
+            input:    date ? date.format(props.format) : '',
             expanded: props.expanded || false,
-            toolboxOnTheBottom: false,
-            view: props.view || defaults.view
+            view:     props.view || defaults.view,
+            toolboxOnTheBottom: false
         };
 
-        this.onInputChange          = this.onInputChange.bind(this);
+        this.onInputChange         = this.onInputChange.bind(this);
+        this.handleOnInputClick    = this.handleOnInputClick.bind(this);
 
         // Open/close
-        this.handleOnInputClick     = this.handleOnInputClick.bind(this);
+        this.collapse              = this.collapse.bind(this);
+        this.expand                = this.expand.bind(this);
 
         // Rendering parts
-        this.renderViewTitle        = this.renderViewTitle.bind(this);
-        this.renderCalendarView     = this.renderCalendarView.bind(this);
+        this.renderViewTitle       = this.renderViewTitle.bind(this);
+        this.renderCalendarView    = this.renderCalendarView.bind(this);
 
         // Clicks inside of calendar
-        this.handleOnDayClick       = this.handleOnDayClick.bind(this);
-        this.handleOnYearClick      = this.handleOnYearClick.bind(this);
-        this.handleOnMonthClick     = this.handleOnMonthClick.bind(this);
-        this.handleOnDateClick      = this.handleOnDateClick.bind(this);
-        this.handleOnTitleClick     = this.handleOnTitleClick.bind(this);
+        this.handleOnDayClick      = this.handleOnDayClick.bind(this);
+        this.handleOnYearClick     = this.handleOnYearClick.bind(this);
+        this.handleOnMonthClick    = this.handleOnMonthClick.bind(this);
+        this.handleOnDateClick     = this.handleOnDateClick.bind(this);
+        this.handleOnTitleClick    = this.handleOnTitleClick.bind(this);
 
         // Left/Right arrows
-        this.handleOnMoveClick      = this.handleOnMoveClick.bind(this);
-        this.handleOnNextClick      = this.handleOnNextClick.bind(this);
-        this.handleOnPrevClick      = this.handleOnPrevClick.bind(this);
+        this.handleOnMoveClick     = this.handleOnMoveClick.bind(this);
+        this.handleOnNextClick     = this.handleOnNextClick.bind(this);
+        this.handleOnPrevClick     = this.handleOnPrevClick.bind(this);
 
         // Bottom buttons
-        this.handleOnTodayClick     = this.handleOnTodayClick.bind(this);
-        this.handleOnTomorrowClick  = this.handleOnTomorrowClick.bind(this);
-        this.handleOnNextWeekClick  = this.handleOnNextWeekClick.bind(this);
+        this.handleOnTodayClick    = this.handleOnTodayClick.bind(this);
+        this.handleOnTomorrowClick = this.handleOnTomorrowClick.bind(this);
+        this.handleOnNextWeekClick = this.handleOnNextWeekClick.bind(this);
 
         // Reposition calendar respecting the screen sizes
         this.setupCalendarPosition = this.setupCalendarPosition.bind(this);
@@ -82,22 +84,22 @@ class BetterDatePicker extends Component {
 
     componentWillReceiveProps(nextProps) {
         let input = getMomentOrNull(nextProps.date, nextProps.format);
-        if (input) input = input.format(nextProps.format);
-        else input = '';
 
-        if (nextProps.expanded === false && this.state.expanded === true) {
-            this.handleClickOutside();
+        input = input ? input.format(nextProps.format) : '';
+
+        if (nextProps.expanded === false &&
+            this.state.expanded === true) {
+            this.collapse();
+        } else {
+            this.setState({
+                date: nextProps.date || new Date(),
+                expanded: nextProps.expanded,
+                input
+            });
         }
-
-        this.setState({
-            date: nextProps.date || new Date(),
-            expanded: nextProps.expanded,
-            input
-        });
     }
 
-
-    componentDidUpdate(nextProps, nextState) {
+    componentWillUpdate(nextProps, nextState) {
         if (nextState.expanded === false &&
             this.state.expanded === true &&
             this.props.staticCalendar !== true) {
@@ -106,27 +108,30 @@ class BetterDatePicker extends Component {
     }
 
     setupCalendarPosition() {
-        const body = document.getElementsByTagName('body')[0];
+        const body     = document.getElementsByTagName('body')[0];
         const calendar = this.calendarElement;
-        const input = this.inputElement || this.container;
+        const input    = this.inputElement || this.container;
+
+        if (!input) {
+            return;
+        }
 
         // Maximum visible sizes of the body
         const maxVisibleHeight = body.clientHeight;
-        const maxVisibleWidth = body.clientWidth;
+        const maxVisibleWidth  = body.clientWidth;
 
         // Get Input field
-        // if !inputRect
         const inputRect = input.getBoundingClientRect();
 
         // Clone hidden calendar to detect size before animation
         // of the original one has to happen
         const clonedCalendar = calendar.cloneNode(true);
-        clonedCalendar.style.animation = 'none';
+        clonedCalendar.style.animation  = 'none';
         clonedCalendar.style.visibility = 'collapse';
 
         // Setup a cloned version of a calendar
         clonedCalendar.style.position = 'fixed';
-        clonedCalendar.style.top = ( inputRect.top + inputRect.height ) + 'px';
+        clonedCalendar.style.top  = ( inputRect.top + inputRect.height ) + 'px';
         clonedCalendar.style.left = inputRect.left + 'px';
 
         // Finally append clonedCalendar to the body, so
@@ -158,6 +163,20 @@ class BetterDatePicker extends Component {
         clonedCalendar.remove();
     }
 
+    expand() {
+        this.setState({
+            closing: false,
+            expanded: true
+        });
+    }
+
+    collapse() {
+        this.setState({
+            closing: true,
+            expanded: false
+        });
+    }
+
     onInputChange(e) {
         const input = e.target.value;
         const momentOrNull = getMomentOrNull(input, this.props.format);
@@ -170,12 +189,12 @@ class BetterDatePicker extends Component {
     }
 
     handleOnInputClick() {
-        this.setState({ expanded: true, closing: false });
+        this.expand();
         this.props.onClick && this.props.onClick();
     }
 
     handleClickOutside() {
-        this.setState({ closing: true, expanded: false });
+        this.collapse();
     }
 
     renderCalendarView() {
@@ -195,7 +214,7 @@ class BetterDatePicker extends Component {
     }
 
     renderViewTitle() {
-        const { date = new Date(), view } = this.state;
+        const { date, view } = this.state;
 
         switch(view) {
             case 'weeks':
@@ -213,27 +232,12 @@ class BetterDatePicker extends Component {
 
     handleOnTitleClick() {
         const { view } = this.state;
-        const { availableViews } = this.props;
+        const { views } = this.props;
 
-        switch(view) {
-            case 'weeks':
-                if (availableViews.indexOf('months') !== -1) {
-                    this.setState({ view: 'months' });
-                }
-                break;
-            case 'months':
-                if (availableViews.indexOf('years') !== -1) {
-                    this.setState({ view: 'years' });
-                }
-                break;
-            case 'years':
-                if (availableViews.indexOf('weeks') !== -1) {
-                    this.setState({ view: 'weeks' });
-                }
-                break;
-            default:
-                return
-        }
+        const current  = views.indexOf(view);
+        const nextView = views[current + 1] || views[0];
+
+        this.setState({ view: nextView });
     }
 
     handleOnTodayClick() {
@@ -253,7 +257,7 @@ class BetterDatePicker extends Component {
         this.props.onChange(moment( date ).toDate());
 
         if (!this.props.staticCalendar) {
-            this.setState({ expanded: false });
+            this.collapse();
         }
     }
 

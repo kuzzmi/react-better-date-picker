@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import BetterDatePicker from '../src/react-better-date-picker';
-// , mount, render
 
 describe('react-better-date-picker', function() {
     it('should have one input', function() {
@@ -64,12 +63,38 @@ describe('react-better-date-picker', function() {
         expect(wrapper.find('.better-date-picker-title').text().indexOf('2016')).not.toEqual(-1);
     });
 
-    xit('should restrict available views to one view if the only view is set as available', () => {
-        const wrapper = mount(<BetterDatePicker date={ null } availableViews={['weeks']} />);
+    it('should display proper years range', () => {
+        const date = new Date('2016-01-01T00:00:00Z');
+        const wrapper = mount(<BetterDatePicker date={ date } />);
+        const input = wrapper.find('input[type="text"]');
+        input.simulate('click');
+
+        const title = wrapper.find('.better-date-picker-title');
+        title.simulate('click');
+        title.simulate('click');
+
+        expect(title.text().indexOf('2012')).not.toEqual(-1);
+        expect(title.text().indexOf('2020')).not.toEqual(-1);
+    });
+
+    it('should restrict available views to one view if the only view is set as available', () => {
+        const wrapper = mount(<BetterDatePicker date={ null } views={[ 'weeks' ]} />);
         const input = wrapper.find('input[type="text"]');
         input.simulate('click');
         const title = wrapper.find('.better-date-picker-title');
         title.simulate('click');
-        expect(wrapper.find('.better-date-weeks-view').length).toBe(1);
+        expect(wrapper.find('.better-date-picker-weeks-view').length).toBe(1);
     });
+
+    it('should restrict available views to two views if only two view are set as available', () => {
+        const wrapper = mount(<BetterDatePicker date={ null } views={[ 'weeks', 'years' ]} />);
+        const input = wrapper.find('input[type="text"]');
+        input.simulate('click');
+        const title = wrapper.find('.better-date-picker-title');
+        title.simulate('click');
+        expect(wrapper.find('.better-date-picker-years-view').length).toBe(1);
+        title.simulate('click');
+        expect(wrapper.find('.better-date-picker-weeks-view').length).toBe(1);
+    });
+
 });

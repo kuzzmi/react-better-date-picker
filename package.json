@@ -22,8 +22,8 @@
   },
   "homepage": "https://github.com/kuzzmi/react-better-date-picker#readme",
   "dependencies": {
-    "moment": "^2.13.0",
-    "react": "^15.1.0",
+    "moment": "^2.16.0",
+    "react": "^15.2.1",
     "react-dom": "^15.1.0",
     "react-moment-proptypes": "^1.2.0",
     "react-onclickoutside": "^5.3.3"

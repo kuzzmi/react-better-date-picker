@@ -30,7 +30,7 @@ export const makeInterval = length => {
 };
 
 export const getYearsInterval = ( date, interval ) => {
-    let yearsTo = null;
+    let yearsTo   = null;
     let yearsFrom = null;
 
     if (interval === null || interval === '' || isNaN(interval) || +interval < 0) {
@@ -38,11 +38,13 @@ export const getYearsInterval = ( date, interval ) => {
     }
 
     yearsFrom = getMomentOrNull(date);
-    yearsTo = getMomentOrNull(date);
+    yearsTo   = getMomentOrNull(date);
+
     if (yearsFrom && yearsTo) {
         yearsFrom.add(-1 * interval, 'year');
         yearsTo.add(interval, 'year');
     }
+
     return { yearsFrom, yearsTo };
 };
 
@@ -52,9 +54,11 @@ export const getTotalWeeksInMonth = date => {
     }
 
     const startWeek = moment(date).startOf('month').week();
-    const endWeek = moment(date).endOf('month').week();
+    const endWeek   = moment(date).endOf('month').week();
 
-    return ( endWeek > startWeek ? endWeek - startWeek : startWeek ) + 1;
+    const result = ( endWeek > startWeek ? endWeek - startWeek : startWeek ) + 1;
+
+    return result > 6 ? 6 : result;
 };
 
 export const getFirstDayOfFirstWeek = date => {

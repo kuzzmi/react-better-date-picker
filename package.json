@@ -2,14 +2,13 @@
   "name": "react-better-date-picker",
   "version": "0.1.5",
   "description": "Yet another date picker for React. But better.",
-  "main": "dist/index.js",
+  "main": "dist/react-better-date-picker.js",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src demo",
     "test": "karma start karma.conf.js --single-run",
     "test:watch": "karma start karma.conf.js",
-    "build": "webpack --config webpack.config.js",
-    "build-demo": "NODE_ENV=production webpack -p"
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",

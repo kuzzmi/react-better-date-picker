@@ -1094,4 +1094,4 @@ define("react-better-date-picker", ["react","moment"], function(__WEBPACK_EXTERN
 
 /***/ }
 /******/ ])});;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=react-better.date-picker.js.map

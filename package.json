@@ -1,6 +1,6 @@
 {
   "name": "react-better-date-picker",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Yet another date picker for React. But better.",
   "main": "dist/react-better-date-picker.js",
   "scripts": {

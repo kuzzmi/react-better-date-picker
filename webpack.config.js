@@ -1,9 +1,28 @@
-var path = require('path');
+const path    = require('path');
+const webpack = require('webpack');
 
-var entry = [ './src/react-better-date-picker.js' ];
+const entry = [
+    './src/react-better-date-picker.js'
+];
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+const plugins = [];
+
+if (isProduction) {
+    plugins.push(
+        new webpack.optimize.DedupePlugin(),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production')
+        }),
+        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.AggressiveMergingPlugin(),
+        new webpack.NoErrorsPlugin()
+    );
+}
 
 module.exports = {
-    devtool: 'cheap-module-source-map',
     entry,
     output: {
         path: path.join(__dirname, 'dist'),
@@ -26,5 +45,6 @@ module.exports = {
             loaders: ['babel'],
             exclude: /build|node_modules/
         }]
-    }
+    },
+    plugins
 };

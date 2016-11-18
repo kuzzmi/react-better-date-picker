@@ -547,7 +547,7 @@ define("react-better-date-picker", ["react","moment"], function(__WEBPACK_EXTERN
 	    hideToolbox: false,
 	    hideInput: false
 	};
-		exports.default = BetterDatePicker;
+	exports.default = BetterDatePicker;
 
 /***/ },
 /* 2 */
@@ -912,7 +912,7 @@ define("react-better-date-picker", ["react","moment"], function(__WEBPACK_EXTERN
 	    yearsCols: 3,
 	    monthsCols: 4,
 	    weeksCols: 7
-		};
+	};
 
 /***/ },
 /* 8 */
@@ -1036,7 +1036,7 @@ define("react-better-date-picker", ["react","moment"], function(__WEBPACK_EXTERN
 	    ),
 	    view: 'weeks',
 	    format: 'YYYY-MM-DD'
-		};
+	};
 
 /***/ },
 /* 10 */
@@ -1090,8 +1090,7 @@ define("react-better-date-picker", ["react","moment"], function(__WEBPACK_EXTERN
 	    yearsView: _config2.default.classPrefix + '-years-view',
 	    yearsRow: _config2.default.classPrefix + '-years-row',
 	    yearsCell: _config2.default.classPrefix + '-years-cell'
-		};
+	};
 
 /***/ }
 /******/ ])});;
-//# sourceMappingURL=react-better-date-picker.js.map
